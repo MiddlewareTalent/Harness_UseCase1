@@ -38,7 +38,7 @@ html = f"""
 
 msg.attach(MIMEText(html, "html"))
 
-# === Send Email ===
+# === Send Email ====
 try:
     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
         server.starttls()
