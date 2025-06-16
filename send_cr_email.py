@@ -1,28 +1,35 @@
 import subprocess
 import smtplib
-import json
 import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# === Git Metadata ===
+# === Git Metadata with Fallback ===
 def get_git_info():
-    author = subprocess.getoutput("git log -1 --pretty=format:'%an'").strip("'")
-    commit_msg = subprocess.getoutput("git log -1 --pretty=format:'%s'")
-    branch = subprocess.getoutput("git rev-parse --abbrev-ref HEAD")
-    commit_hash = subprocess.getoutput("git rev-parse --short HEAD")
+    def safe_run(cmd, fallback):
+        try:
+            output = subprocess.check_output(cmd, shell=True, text=True).strip()
+            return output if output else fallback
+        except Exception:
+            return fallback
+
+    author = safe_run("git log -1 --pretty=format:'%an'", "unknown").strip("'")
+    commit_msg = safe_run("git log -1 --pretty=format:'%s'", "No commit message")
+    branch = safe_run("git rev-parse --abbrev-ref HEAD", "unknown")
+    commit_hash = safe_run("git rev-parse --short HEAD", "unknown")
+
     return author, commit_msg, branch, commit_hash
 
 author, commit_msg, branch, commit_hash = get_git_info()
 
 # === Config ===
-NGROK_URL = "https://bd3c-136-232-205-158.ngrok-free.app"  # Your live public URL
-GITHUB_REPO_URL = "https://github.com/MiddlewareTalent/Harness_Splunk_Automation_Approval.git"
+NGROK_URL = "https://bd3c-136-232-205-158.ngrok-free.app"
+GITHUB_REPO_URL = "https://github.com/MiddlewareTalent/Harness_UseCase1.git"
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-EMAIL = "yaswanthkumarch2001@gmail.com"  # FROM
+EMAIL = "yaswanthkumarch2001@gmail.com"
 PASSWORD = "uqjc bszf djfw bsor"
-TO_EMAIL = "Raviteja@middlewaretalents.com"  # TO
+TO_EMAIL = "Raviteja@middlewaretalents.com"
 
 # === Email Setup ===
 msg = MIMEMultipart("alternative")
@@ -30,7 +37,6 @@ msg["Subject"] = "📝 Enter CR Number – Harness Pipeline Input"
 msg["From"] = EMAIL
 msg["To"] = TO_EMAIL
 
-# === CR Input Link ===
 cr_input_link = f"{NGROK_URL}/cr_form"
 
 # === Email HTML Body ===

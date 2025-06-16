@@ -60,5 +60,12 @@ def reset_cr_input():
     cr_input["cr_number"] = None
     return jsonify({"message": "CR reset successful"}), 200
 
+# Add this route to reset the schedule
+@app.route('/reset_schedule', methods=['POST'])
+def reset_schedule():
+    global schedule
+    schedule = None
+    return jsonify({'status': 'schedule reset'})
+
 if __name__ == '__main__':
     app.run(port=5000)
