@@ -2,13 +2,16 @@ from flask import Flask, request, jsonify, render_template_string
 
 app = Flask(__name__)
 
+# === Global Variables ===
 cr_input = None
 schedule_input = None
 
+# === Index Route ===
 @app.route('/')
 def index():
     return "ServiceNow Demo App Running..."
 
+# === CR Input Form ===
 @app.route('/cr_form', methods=['GET'])
 def cr_form():
     return render_template_string('''
@@ -29,6 +32,13 @@ def submit_cr():
 def get_cr_input():
     return jsonify({"cr_number": cr_input})
 
+@app.route('/reset_cr_input', methods=['POST'])
+def reset_cr_input():
+    global cr_input
+    cr_input = None
+    return jsonify({"message": "CR reset successful"}), 200
+
+# === Schedule Input Form ===
 @app.route('/schedule_form', methods=['GET'])
 def schedule_form():
     return render_template_string('''
@@ -54,18 +64,12 @@ def submit_schedule():
 def get_schedule():
     return jsonify({"schedule": schedule_input})
 
-# ✅ THIS IS REQUIRED
-@app.route("/reset_cr_input", methods=["POST"])
-def reset_cr_input():
-    cr_input["cr_number"] = None
-    return jsonify({"message": "CR reset successful"}), 200
-
-# Add this route to reset the schedule
 @app.route('/reset_schedule', methods=['POST'])
 def reset_schedule():
-    global schedule
-    schedule = None
-    return jsonify({'status': 'schedule reset'})
+    global schedule_input
+    schedule_input = None
+    return jsonify({"status": "schedule reset"})
 
+# === Run the App ===
 if __name__ == '__main__':
     app.run(port=5000)
