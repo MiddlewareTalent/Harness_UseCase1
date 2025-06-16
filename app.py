@@ -54,5 +54,11 @@ def submit_schedule():
 def get_schedule():
     return jsonify({"schedule": schedule_input})
 
+# ✅ THIS IS REQUIRED
+@app.route("/reset_cr_input", methods=["POST"])
+def reset_cr_input():
+    cr_input["cr_number"] = None
+    return jsonify({"message": "CR reset successful"}), 200
+
 if __name__ == '__main__':
     app.run(port=5000)
