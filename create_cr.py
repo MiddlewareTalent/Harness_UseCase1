@@ -36,38 +36,38 @@ def get_git_metadata():
         print(f"[❌] Failed to fetch Git metadata: {e}")
         return {}
 
-# === Send Notification Email ===
-def send_email(cr_number, cr_url):
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"[ServiceNow] New CR Created: {cr_number}"
-    msg["From"] = SENDER_EMAIL
-    msg["To"] = RECIPIENT_EMAIL
-
-    html = f"""
-    <html>
-      <body>
-        <p>✅ A new Change Request <strong>{cr_number}</strong> has been created.<br>
-           🔗 Click the button below to view it in ServiceNow:</p>
-        <a href="{cr_url}" style="
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;">View Change Request</a>
-      </body>
-    </html>
-    """
-    msg.attach(MIMEText(html, "html"))
-
-    try:
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SENDER_EMAIL, SENDER_PASSWORD)
-            server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())
-        print(f"[✅] Email sent to {RECIPIENT_EMAIL}")
-    except Exception as e:
-        print(f"[❌] Failed to send email: {e}")
+# # === Send Notification Email ===
+# def send_email(cr_number, cr_url):
+#     msg = MIMEMultipart("alternative")
+#     msg["Subject"] = f"[ServiceNow] New CR Created: {cr_number}"
+#     msg["From"] = SENDER_EMAIL
+#     msg["To"] = RECIPIENT_EMAIL
+#
+#     html = f"""
+#     <html>
+#       <body>
+#         <p>✅ A new Change Request <strong>{cr_number}</strong> has been created.<br>
+#            🔗 Click the button below to view it in ServiceNow:</p>
+#         <a href="{cr_url}" style="
+#             display: inline-block;
+#             padding: 10px 20px;
+#             background-color: #007bff;
+#             color: white;
+#             text-decoration: none;
+#             border-radius: 5px;">View Change Request</a>
+#       </body>
+#     </html>
+#     """
+#     msg.attach(MIMEText(html, "html"))
+#
+#     try:
+#         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+#             server.starttls()
+#             server.login(SENDER_EMAIL, SENDER_PASSWORD)
+#             server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())
+#         print(f"[✅] Email sent to {RECIPIENT_EMAIL}")
+#     except Exception as e:
+#         print(f"[❌] Failed to send email: {e}")
 
 # === Create CR in ServiceNow ===
 def create_change_request(metadata):
