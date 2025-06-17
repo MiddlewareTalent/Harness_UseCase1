@@ -4,7 +4,7 @@ import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# === Git Metadata with Fallback ===
+# === Git Metadata with Fallback ====
 def get_git_info():
     def safe_run(cmd, fallback):
         try:
