@@ -14,35 +14,41 @@ import requests
 import glob
 import os
 
-# 🔐 Hardcoded Splunk credentials (for testing/demo ONLY)
+# 🔐 Hardcoded Splunk credentials (use Harness secrets in production)
 SPLUNK_HEC_URL = "https://prd-p-p4d4r.splunkcloud.com:8088"
 SPLUNK_HEC_TOKEN = "2ba8def0-7c2d-46ae-876d-847e4f5b13c8"
 SPLUNK_INDEX = "ravi-index"
-SPLUNK_SOURCETYPE = "app_logs"  # 👈 Change if needed
+SPLUNK_SOURCETYPE = "app_logs"
 
 headers = {
     "Authorization": f"Splunk {SPLUNK_HEC_TOKEN}",
-    "Content-Type": "app/json"
+    "Content-Type": "application/json"
 }
 
-log_files = glob.glob("application/app.log")
+log_files = glob.glob("logs/app.log")
 
 if not log_files:
-    print("⚠️ No log files found in logs/errors.log — skipping send.")
+    print("⚠️ No log files found in logs/ — skipping send.")
 else:
     print(f"📂 Found log file(s): {log_files}")
 
 for filepath in log_files:
+    if os.path.getsize(filepath) == 0:
+        print(f"⚠️ Skipping empty log file: {filepath}")
+        continue
+
     with open(filepath, "r") as f:
         for line in f:
-            if not line.strip():
+            line = line.strip()
+            if not line:
                 continue
             payload = {
-                "event": line.strip(),
+                "event": line,
                 "sourcetype": SPLUNK_SOURCETYPE,
-                "index": SPLUNK_INDEX
+                "index": SPLUNK_INDEX,
+                "source": os.path.basename(filepath)
             }
-            print(f"📤 Sending: {payload}")  # Debug: print what's being sent
+            print(f"📤 Sending from {os.path.basename(filepath)}: {line}")
             try:
                 response = requests.post(
                     f"{SPLUNK_HEC_URL}/services/collector/event",
@@ -52,7 +58,7 @@ for filepath in log_files:
                     verify=False
                 )
                 if response.status_code == 200:
-                    print(f"✅ Sent: {line.strip()}")
+                    print(f"✅ Sent successfully")
                 else:
                     print(f"❌ Error {response.status_code}: {response.text}")
             except Exception as e:
