@@ -14,7 +14,7 @@ import requests
 import glob
 import os
 
-# 🔐 Hardcoded Splunk credentials (use Harness secrets in production)
+# 🔐 Splunk credentials
 SPLUNK_HEC_URL = "https://prd-p-p4d4r.splunkcloud.com:8088"
 SPLUNK_HEC_TOKEN = "2ba8def0-7c2d-46ae-876d-847e4f5b13c8"
 SPLUNK_INDEX = "ravi-index"
@@ -25,7 +25,7 @@ headers = {
     "Content-Type": "application/json"
 }
 
-log_files = glob.glob("logs/app.log")
+log_files = glob.glob("logs/*.log")
 
 if not log_files:
     print("⚠️ No log files found in logs/ — skipping send.")
@@ -63,4 +63,33 @@ for filepath in log_files:
                     print(f"❌ Error {response.status_code}: {response.text}")
             except Exception as e:
                 print(f"❌ Exception while sending log: {e}")
+EOF
+
+echo "📧 Sending deployment success email..."
+
+python3 <<EOF
+import smtplib
+from email.message import EmailMessage
+
+# 📧 SMTP Config
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+SMTP_USERNAME = "eshwar.bashabathini88@gmail.com"
+SMTP_PASSWORD = "rqob tobv xdeq pscr"
+TO_EMAIL = "Raviteja@middlewaretalents.com"
+
+msg = EmailMessage()
+msg["Subject"] = "✅ Deployment Successful - Splunk Automation"
+msg["From"] = SMTP_USERNAME
+msg["To"] = TO_EMAIL
+msg.set_content("🎉 Deployment to Splunk has completed successfully!\n\nAll logs from the logs/ folder were sent.\n\nRegards,\nHarness Automation Bot")
+
+try:
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+        server.starttls()
+        server.login(SMTP_USERNAME, SMTP_PASSWORD)
+        server.send_message(msg)
+        print("✅ Deployment success email sent!")
+except Exception as e:
+    print(f"❌ Failed to send success email: {e}")
 EOF
