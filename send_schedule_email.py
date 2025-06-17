@@ -13,7 +13,7 @@ TO_EMAIL = "Raviteja@middlewaretalents.com"
 NGROK_URL = "https://8b5d-136-232-205-158.ngrok-free.app"
 schedule_link = f"{NGROK_URL}/schedule_form"
 
-# === Email Message ===
+# === Email Message ====
 msg = MIMEMultipart("alternative")
 msg["Subject"] = "📅 Schedule Deployment – Harness Splunk Pipeline"
 msg["From"] = EMAIL
