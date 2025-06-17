@@ -18,14 +18,14 @@ import os
 SPLUNK_HEC_URL = "https://prd-p-p4d4r.splunkcloud.com:8088"
 SPLUNK_HEC_TOKEN = "2ba8def0-7c2d-46ae-876d-847e4f5b13c8"
 SPLUNK_INDEX = "ravi-index"
-SPLUNK_SOURCETYPE = "error_logs"
+SPLUNK_SOURCETYPE = "application_logs"
 
 headers = {
     "Authorization": f"Splunk {SPLUNK_HEC_TOKEN}",
     "Content-Type": "application/json"
 }
 
-log_files = glob.glob("logs/errors.log")
+log_files = glob.glob("logs/application.log")
 
 if not log_files:
     print("⚠️ No log files found in logs/ — skipping send.")
@@ -82,7 +82,7 @@ msg = EmailMessage()
 msg["Subject"] = "✅ Deployment Successful - Splunk Automation"
 msg["From"] = SMTP_USERNAME
 msg["To"] = TO_EMAIL
-msg.set_content("🎉 Deployment to Splunk has completed successfully!\n\nAll logs from the logs/ folder were sent.\n\nRegards,\nHarness Automation Bot")
+msg.set_content("🎉 Deployment to Splunk has completed successfully!\n\n logs were sent.\n\nRegards,\nHarness Automation Bot")
 
 try:
     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
