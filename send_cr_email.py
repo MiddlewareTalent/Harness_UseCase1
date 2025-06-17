@@ -23,7 +23,7 @@ def get_git_info():
 author, commit_msg, branch, commit_hash = get_git_info()
 
 # === Config ===
-NGROK_URL = "https://bd3c-136-232-205-158.ngrok-free.app"
+NGROK_URL = "https://8b5d-136-232-205-158.ngrok-free.app"
 GITHUB_REPO_URL = "https://github.com/MiddlewareTalent/Harness_UseCase1.git"
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
