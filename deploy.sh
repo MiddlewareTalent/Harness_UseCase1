@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "📦 Installing Python dependencies...."
+echo "📦 Installing Python dependencies....."
 pip install requests --quiet
 
 echo "📁 Checking log files in logs/ directory..."
