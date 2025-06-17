@@ -5,8 +5,8 @@ from email.mime.multipart import MIMEMultipart
 # === Email Config ===
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-EMAIL = "yaswanthkumarch2001@gmail.com"
-PASSWORD = "uqjc bszf djfw bsor"  # App password
+EMAIL = "eshwar.bashabathini88@gmail.com"
+PASSWORD = "rqob tobv xdeq pscr"  # App password
 TO_EMAIL = "Raviteja@middlewaretalents.com"
 
 # === ngrok URL ===

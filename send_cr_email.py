@@ -27,8 +27,8 @@ NGROK_URL = "https://bd3c-136-232-205-158.ngrok-free.app"
 GITHUB_REPO_URL = "https://github.com/MiddlewareTalent/Harness_UseCase1.git"
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-EMAIL = "yaswanthkumarch2001@gmail.com"
-PASSWORD = "uqjc bszf djfw bsor"
+EMAIL = "eshwar.bashabathini88@gmail.com"
+PASSWORD = "rqob tobv xdeq pscr"
 TO_EMAIL = "Raviteja@middlewaretalents.com"
 
 # === Email Setup ===
