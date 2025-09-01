@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, render_template_string
 import os
-
+from flask import Flask, request, render_template_string
+from datetime import datetime
+import pytz
 app = Flask(__name__)
 
 SCHEDULE_FILE = "schedule.txt"
@@ -97,12 +99,8 @@ def schedule_form():
         </form>
     ''')
 
-from flask import Flask, request, render_template_string
-from datetime import datetime
-import pytz
 
-app = Flask(__name__)
-SCHEDULE_FILE = "deployment_schedule.txt"
+
 
 @app.route('/submit_schedule', methods=['POST'])
 def submit_schedule():
