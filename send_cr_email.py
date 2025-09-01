@@ -50,7 +50,7 @@ msg["To"] = TO_EMAIL
 
 cr_input_link = f"{NGROK_URL}/cr_form"
 
-# === Email HTML Body ===
+# === Email HTML Body ====
 html = f"""
 <html>
   <body style="font-family: Arial, sans-serif; background-color: #f0f0f0; padding: 20px;">
