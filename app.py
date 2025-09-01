@@ -97,6 +97,12 @@ def schedule_form():
         </form>
     ''')
 
+from flask import Flask, request, render_template_string
+from datetime import datetime
+import pytz
+
+app = Flask(__name__)
+SCHEDULE_FILE = "deployment_schedule.txt"
 
 @app.route('/submit_schedule', methods=['POST'])
 def submit_schedule():
@@ -105,29 +111,26 @@ def submit_schedule():
     timezone = request.form['timezone']
 
     try:
-        # Combine date and time into a datetime object in the provided timezone
+        # Combine date and time into datetime object in user's timezone
         naive_dt = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M")
         user_tz = pytz.timezone(timezone)
         user_dt = user_tz.localize(naive_dt)
 
-        # Convert to IST
-        ist_tz = pytz.timezone('Asia/Kolkata')
-        ist_dt = user_dt.astimezone(ist_tz)
+        # Convert to UTC
+        utc_dt = user_dt.astimezone(pytz.utc)
 
-        # Save to file
+        # Save UTC time in strict format
         with open(SCHEDULE_FILE, "w") as f:
-            f.write(f"Scheduled Time (Original - {timezone}): {user_dt.strftime('%Y-%m-%d %H:%M %Z')}\n")
-            f.write(f"Scheduled Time (IST): {ist_dt.strftime('%Y-%m-%d %H:%M %Z')}")
+            f.write(utc_dt.strftime('%Y-%m-%d %H:%M'))
 
         return f"""
         ✅ Schedule received:<br>
-        Original time: {user_dt.strftime('%Y-%m-%d %H:%M %Z')}<br>
-        Converted to IST: {ist_dt.strftime('%Y-%m-%d %H:%M %Z')}
+        Original time ({timezone}): {user_dt.strftime('%Y-%m-%d %H:%M %Z')}<br>
+        Converted to UTC: {utc_dt.strftime('%Y-%m-%d %H:%M %Z')}
         """
 
     except Exception as e:
         return f"❌ Error: {str(e)}"
-
 
 
 @app.route('/get_schedule')

@@ -1,4 +1,4 @@
-#!/bin/bash - demo
+#!/bin/bash 
 
 
 
@@ -20,14 +20,14 @@ import os
 SPLUNK_HEC_URL = "https://prd-p-idagf.splunkcloud.com:8088"
 SPLUNK_HEC_TOKEN = "6e0ba98d-a308-4e56-bf0f-2bccb7b803ab"
 SPLUNK_INDEX = "ravi-index"
-SPLUNK_SOURCETYPE = "new_logs"
+SPLUNK_SOURCETYPE = "test_logs"
 
 headers = {
     "Authorization": f"Splunk {SPLUNK_HEC_TOKEN}",
     "Content-Type": "application/json"
 }
 
-log_files = glob.glob("logs/new.log")
+log_files = glob.glob("logs/test.log")
 
 if not log_files:
     print("⚠️ No log files found in logs/ — skipping send.")
