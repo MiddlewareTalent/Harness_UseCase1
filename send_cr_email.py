@@ -1,11 +1,11 @@
 import subprocess
 import smtplib
 import os
+import json
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# === Git Metadata with Fallback ====
-# testing
+# === Get Git Metadata with Fallback ===
 def get_git_info():
     def safe_run(cmd, fallback):
         try:
@@ -18,10 +18,22 @@ def get_git_info():
     commit_msg = safe_run("git log -1 --pretty=format:'%s'", "No commit message")
     branch = safe_run("git rev-parse --abbrev-ref HEAD", "unknown")
     commit_hash = safe_run("git rev-parse --short HEAD", "unknown")
+    status = safe_run("git status --short", "No changes")
 
-    return author, commit_msg, branch, commit_hash
+    return author, commit_msg, branch, commit_hash, status
 
-author, commit_msg, branch, commit_hash = get_git_info()
+# === Read CR Number from JSON file ===
+def read_cr_info():
+    try:
+        with open("cr_info.json", "r") as f:
+            data = json.load(f)
+            return data.get("number", "N/A")
+    except Exception:
+        return "N/A"
+
+# === Get Info ===
+author, commit_msg, branch, commit_hash, status = get_git_info()
+cr_number = read_cr_info()
 
 # === Config ===
 NGROK_URL = "https://harness-usecase1.onrender.com"
@@ -34,7 +46,7 @@ TO_EMAIL = "Raviteja@middlewaretalents.com"
 
 # === Email Setup ===
 msg = MIMEMultipart("alternative")
-msg["Subject"] = "📝 Enter CR Number – Harness Pipeline Input"
+msg["Subject"] = f"📝 CR Created: {cr_number} – Harness Pipeline Input"
 msg["From"] = EMAIL
 msg["To"] = TO_EMAIL
 
@@ -45,14 +57,19 @@ html = f"""
 <html>
   <body style="font-family: Arial, sans-serif; background-color: #f0f0f0; padding: 20px;">
     <div style="max-width: 600px; background: white; padding: 20px; margin: auto; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-      <h2 style="color: #2c3e50;">📥 Input Required: Enter CR Number</h2>
+      <h2 style="color: #2c3e50;">📥 CR Created – Action Required</h2>
+
+      <p><strong>CR Number:</strong> <code style="color: green;">{cr_number}</code></p>
       <p><strong>Triggered By:</strong> {author}</p>
       <p><strong>Branch:</strong> <code>{branch}</code></p>
       <p><strong>Commit:</strong> {commit_msg} <code>({commit_hash})</code></p>
 
       <hr style="margin: 20px 0;">
 
-      <p style="font-size: 16px;">Please click the button below to enter the ServiceNow Change Request Number to continue the deployment process.</p>
+      <p><strong>🧾 Git Status:</strong></p>
+      <pre style="background: #f4f4f4; padding: 10px; border-radius: 5px;">{status}</pre>
+
+      <p style="font-size: 16px; margin-top: 20px;">Please click the button below to enter the ServiceNow Change Request Number in the Harness pipeline to continue the deployment process.</p>
 
       <div style="margin: 20px 20px;">
         <a href="{cr_input_link}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">🔗 Enter CR Number</a>

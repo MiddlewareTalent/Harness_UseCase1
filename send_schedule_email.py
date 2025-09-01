@@ -24,6 +24,7 @@ html = f"""
   <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
     <div style="max-width: 600px; background: white; padding: 20px; border-radius: 10px; margin: auto;">
       <h2 style="color: #2c3e50;">🛠️ Schedule Your Deployment</h2>
+      <p>Change Request Validation was Successful, Now</p>
       <p>Please choose the date and time to schedule the deployment.</p>
       <p>
         <a href="{schedule_link}" style="display:inline-block; padding:12px 24px; background-color:#007bff; color:#fff; text-decoration:none; border-radius:6px;">
