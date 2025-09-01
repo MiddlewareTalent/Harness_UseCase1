@@ -10,7 +10,7 @@ PASSWORD = "rqob tobv xdeq pscr"  # App password
 TO_EMAIL = "Raviteja@middlewaretalents.com"
 
 # === ngrok URL ===
-NGROK_URL = "https://f360a63c7d5e.ngrok-free.app"
+NGROK_URL = "https://harness-usecase1.onrender.com"
 schedule_link = f"{NGROK_URL}/schedule_form"
 
 # === Email Message ====
