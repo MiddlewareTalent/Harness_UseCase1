@@ -1,6 +1,5 @@
 import subprocess
 import smtplib
-import os
 import json
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -18,7 +17,6 @@ def get_git_info():
     commit_msg = safe_run("git log -1 --pretty=format:'%s'", "No commit message")
     branch = safe_run("git rev-parse --abbrev-ref HEAD", "unknown")
     commit_hash = safe_run("git rev-parse --short HEAD", "unknown")
-    # status = safe_run("git status --short", "No changes")
 
     return author, commit_msg, branch, commit_hash
 
@@ -66,10 +64,9 @@ html = f"""
 
       <hr style="margin: 20px 0;">
 
-      # <p><strong>🧾 Git Status:</strong></p>
-      # <pre style="background: #f4f4f4; padding: 10px; border-radius: 5px;">{status}</pre>
-
-      <p style="font-size: 16px; margin-top: 20px;">Please click the button below to enter the ServiceNow Change Request Number in the Harness pipeline to continue the deployment process.</p>
+      <p style="font-size: 16px; margin-top: 20px;">
+        Please click the button below to enter the ServiceNow Change Request Number in the Harness pipeline to continue the deployment process.
+      </p>
 
       <div style="margin: 20px 20px;">
         <a href="{cr_input_link}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">🔗 Enter CR Number</a>
