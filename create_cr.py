@@ -3,9 +3,9 @@ import subprocess
 import json
 
 # === ServiceNow Dev Instance ====
-SNOW_INSTANCE = "https://dev228482.service-now.com"
+SNOW_INSTANCE = "https://dev205917.service-now.com"
 USERNAME = "admin"
-PASSWORD = "Gb2NQv*V7pw!"  # Replace with secret manager like CyberArk later
+PASSWORD = "8@iMtq0DN$lN"  # Replace with secret manager like CyberArk later
 
 # === Fetch Git Commit Metadata ===
 def get_git_metadata():

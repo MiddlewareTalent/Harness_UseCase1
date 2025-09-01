@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash - demo
 
 
 
@@ -17,8 +17,8 @@ import glob
 import os
 
 # 🔐 Splunk credentials
-SPLUNK_HEC_URL = "https://prd-p-p4d4r.splunkcloud.com:8088"
-SPLUNK_HEC_TOKEN = "2ba8def0-7c2d-46ae-876d-847e4f5b13c8"
+SPLUNK_HEC_URL = "https://prd-p-idagf.splunkcloud.com:8088"
+SPLUNK_HEC_TOKEN = "6e0ba98d-a308-4e56-bf0f-2bccb7b803ab"
 SPLUNK_INDEX = "ravi-index"
 SPLUNK_SOURCETYPE = "error_logs"
 
