@@ -18,9 +18,9 @@ def get_git_info():
     commit_msg = safe_run("git log -1 --pretty=format:'%s'", "No commit message")
     branch = safe_run("git rev-parse --abbrev-ref HEAD", "unknown")
     commit_hash = safe_run("git rev-parse --short HEAD", "unknown")
-    status = safe_run("git status --short", "No changes")
+    # status = safe_run("git status --short", "No changes")
 
-    return author, commit_msg, branch, commit_hash, status
+    return author, commit_msg, branch, commit_hash
 
 # === Read CR Number from JSON file ===
 def read_cr_info():
@@ -32,7 +32,7 @@ def read_cr_info():
         return "N/A"
 
 # === Get Info ===
-author, commit_msg, branch, commit_hash, status = get_git_info()
+author, commit_msg, branch, commit_hash = get_git_info()
 cr_number = read_cr_info()
 
 # === Config ===
@@ -66,8 +66,8 @@ html = f"""
 
       <hr style="margin: 20px 0;">
 
-      <p><strong>🧾 Git Status:</strong></p>
-      <pre style="background: #f4f4f4; padding: 10px; border-radius: 5px;">{status}</pre>
+      # <p><strong>🧾 Git Status:</strong></p>
+      # <pre style="background: #f4f4f4; padding: 10px; border-radius: 5px;">{status}</pre>
 
       <p style="font-size: 16px; margin-top: 20px;">Please click the button below to enter the ServiceNow Change Request Number in the Harness pipeline to continue the deployment process.</p>
 
