@@ -42,27 +42,93 @@ def reset_cr_input():
     return jsonify({"message": "CR reset successful"})
 
 # === Schedule Input ===
+# @app.route('/schedule_form')
+# def schedule_form():
+#     return render_template_string('''
+#         <h2>Schedule Deployment</h2>
+#         <form method="POST" action="/submit_schedule">
+#             <label>Date (YYYY-MM-DD):</label><br>
+#             <input type="text" name="date" required /><br>
+#             <label>Time (HH:MM 24hr):</label><br>
+#             <input type="text" name="time" required /><br>
+#             <button type="submit">Submit</button>
+#         </form>
+#     ''')
+
+# @app.route('/submit_schedule', methods=['POST'])
+# def submit_schedule():
+#     date = request.form['date']
+#     time = request.form['time']
+
+#     schedule = f"{date} {time}"
+#     with open(SCHEDULE_FILE, "w") as f:
+#         f.write(schedule)
+#     return f"✅ Schedule received: {schedule}"
+
+from flask import Flask, request, render_template_string
+from datetime import datetime
+import pytz
+
 @app.route('/schedule_form')
 def schedule_form():
     return render_template_string('''
-        <h2>Schedule Deployment</h2>
+        <h2>📅 Schedule Deployment</h2>
         <form method="POST" action="/submit_schedule">
-            <label>Date (YYYY-MM-DD):</label><br>
-            <input type="text" name="date" required /><br>
-            <label>Time (HH:MM 24hr):</label><br>
-            <input type="text" name="time" required /><br>
-            <button type="submit">Submit</button>
+            <label>Date:</label><br>
+            <input type="date" name="date" required /><br><br>
+
+            <label>Time (24-hour):</label><br>
+            <input type="time" name="time" required /><br><br>
+
+            <label>Timezone:</label><br>
+            <select name="timezone" required>
+                <option value="UTC">UTC</option>
+                <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                <option value="US/Eastern">US/Eastern</option>
+                <option value="US/Central">US/Central</option>
+                <option value="US/Pacific">US/Pacific</option>
+                <option value="Europe/London">Europe/London</option>
+                <option value="Europe/Berlin">Europe/Berlin</option>
+                <option value="Asia/Tokyo">Asia/Tokyo</option>
+                <option value="Australia/Sydney">Australia/Sydney</option>
+            </select><br><br>
+
+            <button type="submit">✅ Submit</button>
         </form>
     ''')
+
 
 @app.route('/submit_schedule', methods=['POST'])
 def submit_schedule():
     date = request.form['date']
     time = request.form['time']
-    schedule = f"{date} {time}"
-    with open(SCHEDULE_FILE, "w") as f:
-        f.write(schedule)
-    return f"✅ Schedule received: {schedule}"
+    timezone = request.form['timezone']
+
+    try:
+        # Combine date and time into a datetime object in the provided timezone
+        naive_dt = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M")
+        user_tz = pytz.timezone(timezone)
+        user_dt = user_tz.localize(naive_dt)
+
+        # Convert to IST
+        ist_tz = pytz.timezone('Asia/Kolkata')
+        ist_dt = user_dt.astimezone(ist_tz)
+
+        # Save to file
+        with open(SCHEDULE_FILE, "w") as f:
+            f.write(f"Scheduled Time (Original - {timezone}): {user_dt.strftime('%Y-%m-%d %H:%M %Z')}\n")
+            f.write(f"Scheduled Time (IST): {ist_dt.strftime('%Y-%m-%d %H:%M %Z')}")
+
+        return f"""
+        ✅ Schedule received:<br>
+        Original time: {user_dt.strftime('%Y-%m-%d %H:%M %Z')}<br>
+        Converted to IST: {ist_dt.strftime('%Y-%m-%d %H:%M %Z')}
+        """
+
+    except Exception as e:
+        return f"❌ Error: {str(e)}"
+
+
 
 @app.route('/get_schedule')
 def get_schedule():
